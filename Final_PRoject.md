@@ -916,7 +916,7 @@ int(my_location.start)
 
 
 
-##Start of Pt.3
+## Start of Pt.3
 
 
 ```python
@@ -1118,7 +1118,7 @@ print(sub_record.format("gb")[:200] + "...")
 
 
 
-##Start of Pt.4
+## Start of Pt.4
 
 
 
@@ -1223,7 +1223,7 @@ print("%s %i %i %i %i" % (rc.id, len(record), len(rc.features), len(rc.dbxrefs),
     rc_record 9609 41 0 0
 
 #Sequence I/O
-##Start of Part. 1
+## Start of Part. 1
 
 
 
@@ -2018,7 +2018,7 @@ print(len(first_record))
 
 
 
-##Start of Pt. 2
+## Start of Pt. 2
 
 
 
@@ -2214,7 +2214,7 @@ print(first_record.format("fasta"[:200]))
 
 
 
-##Start of Pt.3
+## Start of Pt.3
 
 
 
@@ -2569,8 +2569,8 @@ SeqIO.write(records, "rc.fasta", "fasta")
 
     18
 
-#Multiple Sequence Alignment
-##Start of Part.1
+# Multiple Sequence Alignment
+## Start of Part.1
 
 
 
@@ -2838,7 +2838,7 @@ print(last_align)
 
 
 
-##Start of Pt. 2
+## Start of Pt. 2
 
 
 
@@ -3108,7 +3108,7 @@ print(edited)
 
 
 
-##Start of Pt.3
+## Start of Pt.3
 
 
 
@@ -3287,7 +3287,7 @@ Phylo.draw_ascii(tree)
 
 
 
-##Start of Pt.4
+## Start of Pt.4
 
 
 
@@ -3676,7 +3676,7 @@ print(local_alignment)
 
 
 
-##Start of Pt.5
+## Start of Pt.5
 
 
 
