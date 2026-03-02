@@ -3895,5 +3895,579 @@ aligner.score(target, reverse_complement(query), strand = "+" )
 
 
 
-314159
+# BLAST
+
+```python
+from Bio.Blast import NCBIWWW
+```
+
+
+```python
+from Bio.SeqRecord import SeqRecord
+```
+
+
+```python
+NCBIWWW.email = "allyviator@gmail.com"
+```
+
+
+```python
+result_handle = NCBIWWW.qblast("blastn", "nt", "8332116")
+#Number indicates the id 
+```
+
+
+```python
+from Bio import SeqIO
+```
+
+
+```python
+record = SeqIO.read("m_cold.fasta", format = "fasta")
+#insted with the file
+```
+
+
+```python
+print(record)
+```
+
+    ID: gi|8332116|gb|BE037100.1|BE037100
+    Name: gi|8332116|gb|BE037100.1|BE037100
+    Description: gi|8332116|gb|BE037100.1|BE037100 MP14H09 MP Mesembryanthemum crystallinum cDNA 5' similar to cold acclimation protein, mRNA sequence
+    Number of features: 0
+    Seq('CACTAGTACTCGAGCGTNCTGCACCAATTCGGCACGAGCAAGTGACTACGTTNT...TTC')
+
+
+
+```python
+# * means in process due to processing
+```
+
+
+```python
+result_handle = NCBIWWW.qblast("blastn", "nt", record.seq)
+```
+
+
+```python
+with open("m_cold.fasta", "w") as out_handle:
+    out_handle.write(result_handle.read())
+result_handle.close()
+#Write result handle then close connection
+```
+
+
+```python
+from Bio.Blast import NCBIXML
+```
+
+
+```python
+result_handle = open("m_cold.fasta")
+```
+
+
+```python
+blast_record = NCBIXML.read(result_handle)
+```
+
+
+```python
+E_VALUE_THRESH = 0.04
+```
+
+
+```python
+for alignment in blast_record.alignments:
+    for hsp in alignment.hsps:
+        if hsp.expect < E_VALUE_THRESH:
+            print("***ALIGHTMENT***")
+            print("sequence:", alignment.title)
+            print("length", alignment.length)
+            print("e value:", hsp.expect)
+            print(hsp.query[0:75] + "...")
+            print(hsp.match[0:75] + "...")
+            print(hsp.sbjct[0:75] + "...")
+#printing an alignment for reaablility, sequence values, lengths, e values, the first 75 of query sequence, the matching sequence
+#top shows the most likely match
+```
+
+    ***ALIGHTMENT***
+    sequence: gi|2618480339|ref|XM_048479995.2| PREDICTED: Ziziphus jujuba cold-regulated 413 plasma membrane protein 2 (LOC107424728), mRNA
+    length 1028
+    e value: 3.60314e-72
+    GAA-CAGAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGA...
+    ||| || ||||||||||| |  ||| |||  ||||| |||| |||||||| |   |||  |||| |  ||||  |...
+    GAAGCA-AAAATGGGGAG-G--ATGGAGTTTTTGGCTATGAGAACTGATCCA---GCCACGGCTGACTTGATAAA...
+    ***ALIGHTMENT***
+    sequence: gi|1227938481|ref|XM_022049453.1| PREDICTED: Carica papaya cold-regulated 413 plasma membrane protein 2-like (LOC110820077), mRNA
+    length 1009
+    e value: 1.30512e-66
+    AGAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCG...
+    ||||||||||||| | |  ||| || ||||| ||||| ||||||||   ||||   ||| || | |||  ||| |...
+    AGAAAATGGGGAG-G-ATGGAA-TATTTGGCTATGAAGACTGATCA---GGCCACTGCTGATCTCATCACTTCTG...
+    ***ALIGHTMENT***
+    sequence: gi|2395983798|ref|XM_006466623.4| PREDICTED: Citrus sinensis cold-regulated 413 plasma membrane protein 2 (LOC102620025), transcript variant X3, mRNA
+    length 1052
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|1350315641|ref|XM_024180293.1| PREDICTED: Citrus clementina cold-regulated 413 plasma membrane protein 2 (LOC18037141), transcript variant X4, mRNA
+    length 868
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|1350315634|ref|XM_006425717.2| PREDICTED: Citrus clementina cold-regulated 413 plasma membrane protein 2 (LOC18037141), transcript variant X1, mRNA
+    length 952
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|1350315636|ref|XM_006425716.2| PREDICTED: Citrus clementina cold-regulated 413 plasma membrane protein 2 (LOC18037141), transcript variant X2, mRNA
+    length 881
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|2395983796|ref|XM_025094967.2| PREDICTED: Citrus sinensis cold-regulated 413 plasma membrane protein 2 (LOC102620025), transcript variant X1, mRNA
+    length 980
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|2395983800|ref|XM_006466626.4| PREDICTED: Citrus sinensis cold-regulated 413 plasma membrane protein 2 (LOC102620025), transcript variant X5, mRNA
+    length 913
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|2395983799|ref|XM_006466625.3| PREDICTED: Citrus sinensis cold-regulated 413 plasma membrane protein 2 (LOC102620025), transcript variant X4, mRNA
+    length 978
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|1350315638|ref|XM_006425719.2| PREDICTED: Citrus clementina cold-regulated 413 plasma membrane protein 2 (LOC18037141), transcript variant X3, mRNA
+    length 893
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|2395983797|ref|XM_006466624.4| PREDICTED: Citrus sinensis cold-regulated 413 plasma membrane protein 2 (LOC102620025), transcript variant X2, mRNA
+    length 968
+    e value: 3.65448e-62
+    AAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATA...
+    |||| ||| ||| | |||| || ||||| |||||||||||| |   ||  |  ||  |  |||||   || ||| ...
+    AAAT-GGG-GAG-ATTGAATTATTTGGCTATGAAAACTGATGATCAGGTTGCAGCAGAGTTGATCAGCTCTGATT...
+    ***ALIGHTMENT***
+    sequence: gi|2526866810|ref|XM_057645500.1| PREDICTED: Actinidia eriantha cold-regulated 413 plasma membrane protein 2-like (LOC130785340), mRNA
+    length 1152
+    e value: 1.31439e-61
+    AAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGAT...
+    ||||| ||| ||| |||| | || ||||| ||||| || |||| |  |||  || | ||| ||||| |||| || ...
+    AAAAT-GGG-GAG-AATGGATTATTTGGCGATGAAGACCGATCCAGCGGC--TGCCGAAT-TGATCAATTCGGAC...
+    ***ALIGHTMENT***
+    sequence: gi|1768569081|ref|XM_031406607.1| PREDICTED: Pistacia vera cold-regulated 413 plasma membrane protein 2-like (LOC116120644), mRNA
+    length 982
+    e value: 3.68043e-57
+    TCCGATATCAATGAGCTTAAAATGGCAACAATGAGGCTCATCAATGATGCTAGTATGCTCGGTCATTACGGGTTT...
+    || |||||||||||||||||  | ||  ||| || ||| || ||  | || | ||  ||||||  |   || |||...
+    TCTGATATCAATGAGCTTAAGCTTGCTGCAAAGAAGCTTATTAACCACGCAACTAAACTCGGTGGTCTTGGCTTT...
+    ***ALIGHTMENT***
+    sequence: gi|1954740698|ref|XM_038867092.1| PREDICTED: Tripterygium wilfordii cold-regulated 413 plasma membrane protein 2 (LOC120014952), mRNA
+    length 999
+    e value: 3.68043e-57
+    GAACAGAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGAT...
+    ||| ||||||| ||| ||| || | | || ||||| ||||| |||||||    ||  ||||   || |||||   ...
+    GAAAAGAAAAT-GGG-GAG-AACGGATTATTTGGCGATGAAGACTGATC---CGGTTGTGGACGATTTGATCAGC...
+    ***ALIGHTMENT***
+    sequence: gi|2526831378|ref|XM_057642435.1| PREDICTED: Actinidia eriantha cold-regulated 413 plasma membrane protein 2-like (LOC130782944), mRNA
+    length 1214
+    e value: 3.68043e-57
+    GAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGA...
+    |||||| ||| ||| |||| | || ||||| ||||| || |||| |   | | || | ||| ||||| |||||||...
+    GAAAAT-GGG-GAG-AATGGATTATTTGGCGATGAAGACCGATCCAGCTG-C-TGCCGAAT-TGATCAATTCCGA...
+    ***ALIGHTMENT***
+    sequence: gi|1350280614|ref|XM_024170292.1| PREDICTED: Morus notabilis cold-regulated 413 plasma membrane protein 2 (LOC21394987), mRNA
+    length 1020
+    e value: 2.21505e-54
+    TACTTGGCCATGAAAACTGATCAATTGGCCGTGGCTAATATGATCGATTCCGATATCAATGAGCTTAAAATGGCA...
+    || |||||||||||||| || | |   |||  |||| || ||||  |||| |||||||| ||||| || || || ...
+    TATTTGGCCATGAAAACGGACCCA---GCCACGGCTGATTTGATAAATTCTGATATCAACGAGCTGAAGATCGCT...
+    ***ALIGHTMENT***
+    sequence: gi|2350562715|ref|XM_052350285.1| PREDICTED: Diospyros lotus cold-regulated 413 plasma membrane protein 2-like (LOC127810688), mRNA
+    length 1265
+    e value: 1.03056e-52
+    GGGTTTGGCACTCATTTCCTCAAATGGCTCGCCTGCCTTGCGGCTATTTACTTGTTGATATTGGATCGAACAAAC...
+    || || ||||||   |||||||||||| | |||| | |||| |||||||||||||||||||||||||||||||||...
+    GGCTTCGGCACTTCCTTCCTCAAATGGATTGCCTCCTTTGCTGCTATTTACTTGTTGATATTGGATCGAACAAAC...
+    ***ALIGHTMENT***
+    sequence: gi|1585724761|ref|XM_028202722.1| PREDICTED: Camellia sinensis cold-regulated 413 plasma membrane protein 2-like (LOC114262355), mRNA
+    length 910
+    e value: 3.70656e-52
+    AGAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAAT-TGGCCGTGGCTAATATGATCGATTCC...
+    |||||||||||||  ||||| |||| ||||| ||||| || |||||    | ||    | |||  |||  |||||...
+    AGAAAATGGGGAGGAAAATGGAGTATTTGGCAATGAAGACCGATCATCCAGCCCCAACCCAAT-CGATGAATTCC...
+    ***ALIGHTMENT***
+    sequence: gi|2583747300|ref|XM_059787294.1| PREDICTED: Cornus florida cold-regulated 413 plasma membrane protein 2-like (LOC132285128), mRNA
+    length 1126
+    e value: 1.33311e-51
+    AGAAAATGGGGAGAGAAATGAAGTACTTGGCCATGAAAACTGATCAATTGGCC-GTGGCTAATATGATCGATTCC...
+    ||||||| ||| |||||| | |||| ||||| |||||||||||||    ||||   | | ||| ||||| |||||...
+    AGAAAAT-GGG-GAGAAA-GGAGTATTTGGCTATGAAAACTGATC---CGGCCACAGCCGAAT-TGATCAATTCC...
+    ***ALIGHTMENT***
+    sequence: gi|2118882425|ref|XM_044613294.1| PREDICTED: Mangifera indica cold-regulated 413 plasma membrane protein 2-like (LOC123198583), mRNA
+    length 1083
+    e value: 4.79473e-51
+    CTCATTTCCTCAAATGGCTCGCCTGCCTTGCGGCTATTTACTTGTTGATATTGGATCGAACAAACTGGAGAACCA...
+    ||| ||| ||||||||| | |||| | |||| ||||||||||||||||||||||||||||||||||||||||| |...
+    CTC-TTTTCTCAAATGGGTTGCCTCCTTTGCTGCTATTTACTTGTTGATATTGGATCGAACAAACTGGAGAACAA...
+    ***ALIGHTMENT***
+    sequence: gi|1220094463|ref|XM_021978417.1| PREDICTED: Prunus avium cold-regulated 413 plasma membrane protein 2-like (LOC110773902), mRNA
+    length 896
+    e value: 2.88569e-48
+    TGATCGATTCCGATATCAATGAGCTTAAAATGGCAACAATGAGGCTCATCAATGATGCTAGTATGCTCGGTCATT...
+    ||||  |||| || |||||||| || || || ||| | | ||  |||||||| ||||| | || ||| |||   |...
+    TGATAAATTCAGACATCAATGATCTCAAGATTGCAGCCAAGAAACTCATCAAAGATGCCACTAAGCTTGGTGGGT...
+    ***ALIGHTMENT***
+    sequence: gi|2537875835|ref|XM_021822463.2| PREDICTED: Hevea brasiliensis cold-regulated 413 plasma membrane protein 2 (LOC110663212), transcript variant X1, mRNA
+    length 940
+    e value: 2.88569e-48
+    CGGGTTTGGCACTCATTTCCTCAAATGGCTCGCCTGCCTTGCGGCTATTTACTTGTTGATATTGGATCGAACAAA...
+    ||| ||||| |||  ||| ||||||||| | ||||   |||| || || || ||| |||||||||||||||||||...
+    CGGCTTTGGTACTTCTTTTCTCAAATGGGTTGCCTCTTTTGCTGCCATATATTTGCTGATATTGGATCGAACAAA...
+    ***ALIGHTMENT***
+    sequence: gi|1220047144|ref|XM_021953815.1| PREDICTED: Prunus avium cold-regulated 413 plasma membrane protein 2-like (LOC110753022), mRNA
+    length 894
+    e value: 2.88569e-48
+    TGATCGATTCCGATATCAATGAGCTTAAAATGGCAACAATGAGGCTCATCAATGATGCTAGTATGCTCGGTCATT...
+    ||||  |||| || |||||||| || || || ||| | | ||  |||||||| ||||| | || ||| |||   |...
+    TGATAAATTCAGACATCAATGATCTCAAGATTGCAGCCAAGAAACTCATCAAAGATGCCACTAAGCTTGGTGGGT...
+    ***ALIGHTMENT***
+    sequence: gi|2118854713|ref|XM_044609109.1| PREDICTED: Mangifera indica cold-regulated 413 plasma membrane protein 2-like (LOC123195424), mRNA
+    length 742
+    e value: 1.74907e-40
+    GGGTTTGGCA-CTCATTTCCTCAAATGGCTCGCCTGCCTTGCGGCTATTTACTTGTTGATATTGGATCGAACAAA...
+    || ||||| | ||| ||| ||| ||||||| |||| | |||| |||||||| |||||||||||||||||||||||...
+    GGCTTTGGAATCTC-TTTTCTCCAATGGCTTGCCTCCTTTGCTGCTATTTATTTGTTGATATTGGATCGAACAAA...
+    ***ALIGHTMENT***
+    sequence: gi|2537875838|ref|XM_021822464.2| PREDICTED: Hevea brasiliensis cold-regulated 413 plasma membrane protein 2 (LOC110663212), transcript variant X2, mRNA
+    length 924
+    e value: 4.93235e-31
+    CGGGTTTGGCACTCATTTCCTCAAATGGCTCGCCTGCCTTGCGGCTATTTACTTGTTGATATTGGATCGAACAAA...
+    ||| ||||| |||  ||| ||||||||| | ||||   |||| || || || ||| |||||||||||||||||||...
+    CGGCTTTGGTACTTCTTTTCTCAAATGGGTTGCCTCTTTTGCTGCCATATATTTGCTGATATTGGATCGAACAAA...
+    ***ALIGHTMENT***
+    sequence: gi|2739574736|gb|CP157410.1| Ziziphus jujuba isolate TW-2024b chromosome 08
+    length 27596186
+    e value: 1.08288e-17
+    TTACTTGTTGATATTGGATCGAACAAACTGGAGAACCAACATGCTCACGTCACTTTTAGTCCCTTACATATTCCT...
+    ||| |||||||||||||||||||||||||||||||| || ||||| || ||||||||||| ||||| || ||| |...
+    TTATTTGTTGATATTGGATCGAACAAACTGGAGAACAAATATGCTTACTTCACTTTTAGTTCCTTATATCTTCTT...
+
+
+# Challange
+
+```python
+from Bio.Blast import NCBIWWW
+from Bio.SeqRecord import SeqRecord
+from Bio import SeqIO
+from Bio.Blast import NCBIXML
+```
+
+
+```python
+NCBIWWW.email = "allyviator@gmail.com"
+```
+
+
+```python
+record = SeqIO.read("DDX41.fasta", format = "fasta")
+```
+
+
+```python
+print(record)
+```
+
+    ID: 5
+    Name: 5
+    Description: 5 dna:chromosome chromosome:GRCh38:5:177510969:177517579:-1
+    Number of features: 0
+    Seq('CTCTGTTAGAGCATTTACAGTAATAACCGTTTACATTTATACAGGGCCTCCCAC...GCA')
+
+
+
+```python
+result_handle = NCBIWWW.qblast("blastn", "nt", record.seq, entrez_query = "Pan troglodytes[Organism]")
+#For Ease I found the spesification for Chimps
+```
+
+
+```python
+with open("DDX41.fasta", "w") as out_handle:
+    out_handle.write(result_handle.read())
+result_handle.close()
+```
+
+
+```python
+result_handle = open("DDX41.fasta")
+```
+
+
+```python
+blast_record = NCBIXML.read(result_handle)
+```
+
+
+```python
+E_VALUE_THRESH = 0.04
+```
+
+
+```python
+for alignment in blast_record.alignments:
+    for hsp in alignment.hsps:
+        if hsp.expect < E_VALUE_THRESH:
+            print("***ALIGHTMENT***")
+            print("sequence:", alignment.title)
+            print("e value:", hsp.expect)
+```
+
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.14073e-171
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 3.72906e-165
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 7.70656e-117
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.39584e-75
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.39584e-75
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 2.07161e-73
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.07312e-70
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 4.27368e-63
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.49166e-62
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 7.727e-60
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.59406e-49
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 1.94196e-48
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 2.21578e-41
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 2.36789e-28
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 2.36789e-28
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 8.26474e-28
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 2.88468e-27
+    ***ALIGHTMENT***
+    sequence: gi|2697806900|ref|XM_063810170.1| PREDICTED: Pan troglodytes DEAD-box helicase 41 (DDX41), transcript variant X1, mRNA
+    e value: 9.43006e-21
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 5.90912e-169
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.39584e-75
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.39584e-75
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 2.07161e-73
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 4.56303e-69
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 4.27368e-63
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.49166e-62
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 7.727e-60
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.59406e-49
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.94196e-48
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 2.21578e-41
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 2.36789e-28
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 2.36789e-28
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 8.26474e-28
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 2.88468e-27
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 9.43006e-21
+    ***ALIGHTMENT***
+    sequence: gi|525344024|ref|NM_001280484.1| Pan troglodytes DEAD-box helicase 41 (DDX41), mRNA >gi|343961728|dbj|AK305460.1| Pan troglodytes mRNA for probable ATP-dependent RNA helicase DDX41, complete cds, clone: PtsC-32-5_C06
+    e value: 1.49562e-05
+    ***ALIGHTMENT***
+    sequence: gi|2697815253|ref|XM_063811727.1| PREDICTED: Pan troglodytes docking protein 3 (DOK3), transcript variant X3, mRNA
+    e value: 5.94051e-55
+    ***ALIGHTMENT***
+    sequence: gi|2697815255|ref|XM_063811728.1| PREDICTED: Pan troglodytes docking protein 3 (DOK3), transcript variant X4, mRNA
+    e value: 4.5711e-31
+    ***ALIGHTMENT***
+    sequence: gi|116256684|gb|AC145336.19| Pan troglodytes clone rp43-33e5, complete sequence
+    e value: 0.000182204
+    ***ALIGHTMENT***
+    sequence: gi|109689856|gb|AC159041.2| Pan troglodytes BAC clone CH251-35C17 from chromosome unknown, complete sequence
+    e value: 0.000182204
+    ***ALIGHTMENT***
+    sequence: gi|63004019|gb|AC145339.34| Pan troglodytes clone rp43-58e4, complete sequence
+    e value: 0.000182204
+    ***ALIGHTMENT***
+    sequence: gi|126032540|gb|AC195476.2| Pan troglodytes BAC clone CH251-508P9 from chromosome x, complete sequence
+    e value: 0.0022197
+    ***ALIGHTMENT***
+    sequence: gi|145699148|gb|AC202738.1| Pan troglodytes chromosome X clone CH251-574J3 map human ortholog p11.3, complete sequence
+    e value: 0.0022197
+    ***ALIGHTMENT***
+    sequence: gi|116734893|gb|AC190426.2| Pan troglodytes chromosome X clone CH251-156N9 map human ortholog p11.3, complete sequence
+    e value: 0.0022197
+    ***ALIGHTMENT***
+    sequence: gi|1039301578|gb|AC270861.1| Pan troglodytes chromosome 16 clone CH251-963D22, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|1039301548|gb|AC270831.1| Pan troglodytes chromosome 16 clone CH251-172I21, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|1603830877|gb|AC278947.1| Pan troglodytes chromosome 16 clone CH251-570O22, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|1039301532|gb|AC270820.1| Pan troglodytes chromosome 16 clone CH251-497M24, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|1039679336|gb|AC275224.1| Pan troglodytes chromosome 16 clone CH251-593G6, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|53828902|gb|AC146099.3| Pan troglodytes BAC clone RP43-5L2 from chromosome 7, complete sequence
+    e value: 0.0077475
+    ***ALIGHTMENT***
+    sequence: gi|2697780376|ref|XR_010154037.1| PREDICTED: Pan troglodytes uncharacterized LOC134809139 (LOC134809139), ncRNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|1031987448|gb|AC270728.1| Pan troglodytes chromosome 10 clone CH251-261D7, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|168693799|gb|AC198629.5| Pan troglodytes BAC clone CH251-378F1 from chromosome 7, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|6815214|dbj|AB037522.1| Pan troglodytes gene for natriuretic protein, partial cds
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|1031987305|gb|AC270585.1| Pan troglodytes chromosome 10 clone CH251-370D23, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|1031987264|gb|AC270544.1| Pan troglodytes chromosome 10 clone CH251-74F11, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|146335935|gb|AC189685.3| Pan troglodytes BAC clone CH251-647I11 from chromosome 7, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|148539829|gb|AC195407.2| Pan troglodytes BAC clone CH251-540P22 from chromosome 9, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697768642|ref|XR_010153774.1| PREDICTED: Pan troglodytes uncharacterized LOC134809088 (LOC134809088), transcript variant X2, ncRNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|118566294|gb|AC160941.2| Pan troglodytes BAC clone CH251-430N24 from chromosome 9, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|117962419|gb|AC187127.3| Pan troglodytes BAC clone CH251-121F11 from chromosome unknown, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|1935598432|gb|AC280428.1| Pan troglodytes BAC CH251-370F10 from chromosome, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|1603830817|gb|AC278887.1| Pan troglodytes chromosome 15 clone CH251-37E05, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697718022|ref|XM_063790861.1| PREDICTED: Pan troglodytes eukaryotic translation initiation factor 4E family member 2 (EIF4E2), transcript variant X6, mRNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|110796965|gb|AC187851.2| Pan troglodytes chromosome X clone RP43-41J12 map human ortholog p11.23, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|95147499|gb|AC183964.3| Pan troglodytes BAC clone CH251-654L7 from chromosome 12, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697718026|ref|XR_010149925.1| PREDICTED: Pan troglodytes eukaryotic translation initiation factor 4E family member 2 (EIF4E2), transcript variant X9, misc_RNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697768641|ref|XR_010153771.1| PREDICTED: Pan troglodytes uncharacterized LOC134809088 (LOC134809088), transcript variant X1, ncRNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697718024|ref|XM_054679527.2| PREDICTED: Pan troglodytes eukaryotic translation initiation factor 4E family member 2 (EIF4E2), transcript variant X7, mRNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|2697718021|ref|XR_010149923.1| PREDICTED: Pan troglodytes eukaryotic translation initiation factor 4E family member 2 (EIF4E2), transcript variant X3, misc_RNA
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|149893946|gb|AC193446.3| Pan troglodytes BAC clone CH251-699J14 from chromosome 9, complete sequence
+    e value: 0.0270414
+    ***ALIGHTMENT***
+    sequence: gi|102142635|gb|AC183688.2| Pan troglodytes BAC clone CH251-6F11 from chromosome 1, complete sequence
+    e value: 0.0270414
+
+
+
+```python
+#The E-Value when compared to Chimpanzee is 1.14073e-171
+```
+
+# Open CV
+
+
 
