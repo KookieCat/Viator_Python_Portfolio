@@ -5348,6 +5348,549 @@ plt.imshow(real_chess)
 
 <img width="337" height="252" alt="output_13_1" src="https://github.com/user-attachments/assets/e6dc0816-e086-428e-a11a-ea3dbdd1e180" />
 
+# Edge Detection
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
 
 
+```python
+img = cv2.imread('p.jpg')
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff6941e6f90>
+
+
+
+
+<img width="185" height="252" alt="output_1_1" src="https://github.com/user-attachments/assets/b1e1d48f-2129-4ccb-88e4-2509bb276ac9" />
+
+
+
+
+```python
+edges = cv2.Canny(image =img, threshold1 = 127, threshold2 = 127)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff694160210>
+
+
+
+
+<img width="185" height="252" alt="output_2_1" src="https://github.com/user-attachments/assets/582b54cd-b38d-4e77-aa01-574b6edf9a07" />
+
+
+
+```python
+med_value = np.median(img)
+med_value
+
+#The median color value as compared to 255
+```
+
+
+
+
+    123.0
+
+
+
+
+```python
+lower = int(max(0, 0.7*med_value))
+upper = int(min(255, 1.3*med_value))
+
+edges = cv2.Canny(img, threshold1 = lower, threshold2 = upper)
+
+plt.imshow(edges)
+
+#Edge detection extremly simmilar as the median image value is very close to 127
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff69409ef90>
+
+
+
+
+<img width="185" height="252" alt="output_4_1" src="https://github.com/user-attachments/assets/54944a80-e313-453d-b606-e5fd70cce6e2" />
+
+
+
+
+```python
+edges = cv2.Canny(image = img, threshold1 = lower, threshold2 = upper + 100)
+
+plt.imshow(edges)
+
+#Image looks worse due to med value
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff68dfab190>
+
+
+
+
+<img width="185" height="252" alt="output_5_1" src="https://github.com/user-attachments/assets/a5701a25-1ec7-4ca9-b11e-2097ae0f7a61" />
+
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5, 5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff68df120d0>
+
+
+
+
+<img width="185" height="252" alt="output_6_1" src="https://github.com/user-attachments/assets/6110248f-b37d-4d3e-ac6d-70c6b9f28676" />
+
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5, 5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 100)
+
+plt.imshow(edges)
+
+#The Pig slowly dissapears, as the image in not busy
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff68de51350>
+
+
+
+
+<img width="185" height="252" alt="output_7_1" src="https://github.com/user-attachments/assets/3de8de8d-78f4-484d-8d38-a1c862b4e3a1" />
+
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (7, 7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 60)
+
+plt.imshow(edges)
+
+#The Pig is Gone
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7ff68dcfc410>
+
+
+
+
+<img width="185" height="252" alt="output_8_1" src="https://github.com/user-attachments/assets/e67550fb-b5d3-44b4-a5d8-b06d4562fc3c" />
+
+
+
+
+# Feature Matches
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+def display(img, cmap = 'gray'):
+    fig = plt.figure(figsize = (12, 10))
+    ax = fig.add_subplot(111)
+    ax.imshow(img, cmap = 'gray')
+```
+
+
+```python
+WALDO = cv2.imread("WALDO.jpg", 0)
+display(WALDO)
+```
+
+
+<img width="325" height="577" alt="output_2_0" src="https://github.com/user-attachments/assets/7f7dfcaf-e55f-49f9-8627-b6e4b68ae945" />
+
+
+
+
+```python
+WHERE = cv2.imread('WHERE.jpg', 0)
+display(WHERE)
+```
+
+
+<img width="716" height="530" alt="output_3_0" src="https://github.com/user-attachments/assets/778558cc-7ff5-4947-84e0-0c8c87dc7dcd" />
+
+
+
+
+```python
+print(WALDO is None)
+print(WHERE is None)
+
+# I switched img files alot to get this to work (Because wheres waldo was not the best idea) so I added in adtional image load test
+```
+
+    False
+    False
+
+
+
+```python
+orb = cv2.ORB_create()
+
+kp1,des1 = orb.detectAndCompute(WALDO, mask = None)
+kp2,des2 = orb.detectAndCompute(WHERE, mask = None)
+
+#Finds key features to detect
+```
+
+
+```python
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck = True)
+matches = bf.match(des1, des2)
+
+#Finds all matches
+```
+
+
+```python
+matches = sorted(matches, key = lambda x:x.distance)
+
+#Sorts them by quality
+```
+
+
+```python
+WALDO_matches = cv2.drawMatches(WALDO, kp1, WHERE, kp2, matches[:25], None, flags = 2)
+
+#Only the top 25 used
+```
+
+
+```python
+display(WALDO_matches)
+```
+
+
+<img width="716" height="511" alt="output_9_0" src="https://github.com/user-attachments/assets/889b81cc-987a-4578-a431-34cc93f0b982" />
+
+
+
+
+```python
+sift = cv2.SIFT_create()
+```
+
+
+```python
+kp1, des1 = sift.detectAndCompute(WALDO, None)
+kp2, des2 = sift.detectAndCompute(WHERE, None)
+```
+
+
+```python
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1, des2, k=2)
+```
+
+
+```python
+good = []
+
+#Less distance between features is better
+
+for match1, match2 in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+print('Lenth of Tot Mathces:', len(matches))
+print('Length of Good Matches:', len(good))
+```
+
+    Lenth of Tot Mathces: 199
+    Length of Good Matches: 139
+
+
+
+```python
+sift_matches = cv2.drawMatchesKnn(WALDO, kp1, WHERE, kp2, good, None, flags =2)
+display(sift_matches)
+```
+
+
+<img width="716" height="511" alt="output_15_0" src="https://github.com/user-attachments/assets/67fbbb8a-e391-49d4-a621-05c2d8d6f8d2" />
+
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+sk1, des1 = sift.detectAndCompute(WALDO, None)
+kp2, des2 = sift.detectAndCompute(WHERE, None)
+```
+
+
+```python
+flann_index_KDtree = 0
+index_params = dict(algorithm=flann_index_KDtree, trees = 5)
+serch_params = dict(checks=50)
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, serch_params)
+
+matches = flann.knnMatch(des1, des2, k =2)
+
+good = []
+
+for match1, match2, in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([])
+```
+
+
+```python
+flann_matches = cv2.drawMatchesKnn(WALDO, kp1, WHERE, kp2, good, None, flags = 0)
+display(flann_matches)
+
+#No lines appeared possibly due to size or quality
+```
+
+
+<img width="716" height="511" alt="output_19_0" src="https://github.com/user-attachments/assets/5f724653-1152-4ea7-a3b1-bc22ecdab168" />
+
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+sk1, des1 = sift.detectAndCompute(WALDO, None)
+kp2, des2 = sift.detectAndCompute(WHERE, None)
+```
+
+
+```python
+flann_index_KDtree = 0
+index_params = dict(algorithm=flann_index_KDtree, trees = 5)
+serch_params = dict(checks=50)
+
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, serch_params)
+
+matches = flann.knnMatch(des1, des2, k =2)
+```
+
+
+```python
+matchesMask = [[0,0] for i in range(len(matches))]
+#Pure Black Added
+```
+
+
+```python
+for i, (match1, match2) in enumerate(matches):
+    if match1.distance < 0.75*match2.distance:
+        matchesMask[i] = [1,0]
+
+draw_params = dict(matchColor = (0,255,0),
+                  singlePointColor = (255,0,0),
+                  matchesMask = matchesMask,
+                  flags = 0)
+```
+
+
+```python
+flann_match = cv2.drawMatchesKnn(WALDO, kp1, WHERE, kp2, matches, None, **draw_params)
+
+display(flann_match)
+```
+
+
+<img width="716" height="511" alt="output_25_0" src="https://github.com/user-attachments/assets/03f30890-1963-49a2-bc21-12e1ffa69af0" />
+
+
+# Object Detection
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+full = cv2.imread('Moon.jpg')
+```
+
+
+```python
+full = cv2.cvtColor(full, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(full)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fc5e8999610>
+
+
+
+
+<img width="336" height="252" alt="output_3_1" src="https://github.com/user-attachments/assets/25355eeb-804f-4b74-9743-e1647686e24f" />
+
+
+
+
+```python
+test = cv2.imread('Luna.jpg')
+```
+
+
+```python
+test = cv2.cvtColor(test, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(test)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fc5e8b3a150>
+
+
+
+
+<img width="366" height="252" alt="output_6_1" src="https://github.com/user-attachments/assets/98ed129b-af87-4603-88d5-adb3c4c2c1b8" />
+
+
+
+
+```python
+print('Test image shape:', full.shape)
+print("Training image shape", test.shape)
+```
+
+    Test image shape: (1125, 1500, 3)
+    Training image shape (534, 800, 3)
+
+
+
+```python
+methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED' ]
+
+#All difrent recognition variants saved to methods
+```
+
+
+```python
+for m in methods:
+    
+    test_copy = test.copy()
+    full_copy = full.copy()
+    method = eval(m)
+    
+    res = cv2.matchTemplate(test_copy, full, method)
+    
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+        top_left = min_loc
+    else:
+        top_left = max_loc
+        
+    height, width, channels = full.shape
+    bottom_right = (top_left[0] + width, top_left[1] + height)
+    
+#Drawing box from created heat map, and detmining placement
+
+    cv2.rectangle(full_copy, top_left, bottom_right, (255,0,0), 10)
+    
+    plt.subplot(121)
+    plt.imshow(res)
+    plt.title("Heatmap of Matching")
+    plt.subplot(122)
+    plt.imshow(full_copy)
+    plt.title("Template Detection")
+    
+    plt.suptitle(m)
+    
+    plt.show()
+    print('\n')
+    print('\n')
+```
+
+
+<img width="375" height="233" alt="output_9_0" src="https://github.com/user-attachments/assets/6edeaae9-2493-42d5-b21e-e29a48981156" />
+
+
+<img width="375" height="233" alt="output_9_2" src="https://github.com/user-attachments/assets/229dd40e-6ab0-4689-85fe-6c9998fad935" />
+
+<img width="375" height="233" alt="output_9_4" src="https://github.com/user-attachments/assets/3d171af1-6a4d-4448-90a3-9cf70ba61085" />
+
+<img width="375" height="233" alt="output_9_6" src="https://github.com/user-attachments/assets/a5b8ff50-da01-418e-9b8c-d67a3e0e8704" />
+
+<img width="375" height="233" alt="output_9_8" src="https://github.com/user-attachments/assets/d4175b7b-b64a-4ef2-8cc9-df533523624a" />
+
+<img width="375" height="233" alt="output_9_10" src="https://github.com/user-attachments/assets/9ad6dcd4-a02e-46b9-8917-af3abe87abe7" />
 
