@@ -4468,6 +4468,886 @@ for alignment in blast_record.alignments:
 ```
 
 # Open CV
+## Start of Pt.1
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+import cv2
+```
+
+
+```python
+img = cv2.imread('p.jpg')
+#Set image to this id
+```
+
+
+```python
+plt.imshow(img)
+#MathPlotLib flips color due to formatting
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8507189290>
+
+
+
+
+<img width="185" height="252" alt="output_3_1" src="https://github.com/user-attachments/assets/71874bfc-9a63-457b-87c2-ea43c78af353" />
+
+
+
+
+```python
+fix_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+#Fix Color Formatting
+```
+
+
+```python
+plt.imshow(fix_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f850717b710>
+
+
+
+
+<img width="185" height="252" alt="output_5_1" src="https://github.com/user-attachments/assets/8d1de8ad-335b-47d7-803a-e29da2227b97" />
+
+
+
+
+```python
+img_gray = cv2.imread("p.jpg", cv2.IMREAD_GRAYSCALE)
+img_gray.shape
+#Change to greenscale
+```
+
+
+
+
+    (767, 511)
+
+
+
+
+```python
+plt.imshow(img_gray)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85070d32d0>
+
+
+
+
+<img width="185" height="252" alt="output_7_1" src="https://github.com/user-attachments/assets/c23ab053-b64d-4940-9e48-d987c13aaf06" />
+
+
+
+
+```python
+plt.imshow(img_gray, cmap = "gray")
+#convert to greyscale
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85070b79d0>
+
+
+
+
+<img width="185" height="252" alt="output_8_1" src="https://github.com/user-attachments/assets/0392372f-f96d-422b-a521-7f4123b14b20" />
+
+
+
+
+```python
+fix_img.shape
+#Indicates size
+```
+
+
+
+
+    (767, 511, 3)
+
+
+
+
+```python
+new_img = cv2.resize(fix_img, (1000,3141))
+plt.imshow(new_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f850701b210>
+
+
+
+<img width="115" height="252" alt="output_10_1" src="https://github.com/user-attachments/assets/bc6b2ce3-e908-4154-a8eb-c0c7df4537d1" />
+
+
+
+
+```python
+w_ratio = 0.5
+h_ratio = 0.5
+
+new_img = cv2.resize(fix_img, (0,0), fix_img, w_ratio, h_ratio)
+```
+
+
+```python
+plt.imshow(new_img)
+#Size Reduced by Half
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506ffc950>
+
+
+
+
+<img width="185" height="252" alt="output_12_1" src="https://github.com/user-attachments/assets/e22ae5ec-61cb-42a3-ac60-35a76def94f2" />
+
+
+
+
+```python
+flip_img = cv2.flip(fix_img, 0)
+plt.imshow(flip_img)
+#Flip Vertically
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85070a5f50>
+
+
+
+
+<img width="185" height="252" alt="output_13_1" src="https://github.com/user-attachments/assets/238cd647-5a13-421f-9c6c-cbd49d02bbe7" />
+
+
+
+
+```python
+flip_img2 = cv2.flip(fix_img, -1)
+plt.imshow(flip_img2)
+#Flip Vert and Horiz
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506f0cbd0>
+
+
+
+
+<img width="185" height="252" alt="output_14_1" src="https://github.com/user-attachments/assets/90f91055-6f1a-48c3-a1f4-049dfc17e7ca" />
+
+
+
+
+```python
+cv2.imwrite('PIG_FLIP.jpg', fix_img)
+```
+
+
+
+
+    True
+
+
+
+
+## Start of Pt.2
+
+
+```python
+img = cv2.imread("p.jpg")
+```
+
+
+```python
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506ea7410>
+
+
+
+
+<img width="185" height="252" alt="output_18_1" src="https://github.com/user-attachments/assets/c49246fc-d08b-462b-8236-0d536b094a50" />
+
+
+
+
+```python
+img1 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506e16e90>
+
+
+
+
+<img width="185" height="252" alt="output_20_1" src="https://github.com/user-attachments/assets/7e65208b-ba92-4e35-a656-7d78f4abaff2" />
+
+
+
+
+```python
+img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+#Convert to HSV style much older
+```
+
+
+```python
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506e81bd0>
+
+
+
+
+<img width="185" height="252" alt="output_22_1" src="https://github.com/user-attachments/assets/9ce4c1b7-65cc-49da-8e05-74934b7a6099" />
+
+
+
+
+```python
+img3 = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+plt.imshow(img3)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506f4be50>
+
+
+
+
+<img width="185" height="252" alt="output_23_1" src="https://github.com/user-attachments/assets/4e297387-b0ea-4e7e-836e-d3542150d617" />
+
+
+
+
+```python
+img1 = cv2.imread('Uno.jpg')
+img2 = cv2.imread('p.jpg')
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506cc1ad0>
+
+
+
+
+<img width="203" height="252" alt="output_25_1" src="https://github.com/user-attachments/assets/813124e4-67c0-4c0a-95e7-c5fa5a15f27e" />
+
+
+
+
+```python
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8507276750>
+
+
+
+
+<img width="203" height="252" alt="output_27_1" src="https://github.com/user-attachments/assets/7aa7fe4a-673e-4848-9ddb-64810c77911d" />
+
+
+
+
+```python
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85072b3d50>
+
+
+
+
+<img width="185" height="252" alt="output_28_1" src="https://github.com/user-attachments/assets/8f66288a-85f6-435e-af5d-aa3b170fb703" />
+
+
+
+
+```python
+img1 = cv2.resize(img1, (1200, 1200))
+img2 = cv2.resize(img2, (1200, 1200))
+```
+
+
+```python
+alpha = 0.5
+beta = 0.5
+```
+
+
+```python
+blended = cv2.addWeighted(img1, alpha, img2, beta, gamma = 0)
+#Overlays the images with the set opacties of alpha and beta
+```
+
+
+```python
+plt.imshow(blended)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8507450150>
+
+
+
+
+<img width="263" height="252" alt="output_32_1" src="https://github.com/user-attachments/assets/ce9dc18f-bc8e-4a31-b083-58f424d0f061" />
+
+
+
+
+```python
+alpha = 0.2
+beta = 0.8
+
+blended1 = cv2.addWeighted(img1, alpha, img2, beta, gamma = 0)
+#Diffrent Apla, and Beta weights
+plt.imshow(blended1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8507450b10>
+
+
+
+
+<img width="263" height="252" alt="output_33_1" src="https://github.com/user-attachments/assets/e16cc23a-06d9-4c7a-b1b6-335f687a7307" />
+
+
+
+
+```python
+img1 = cv2.imread('Uno.jpg')
+img2 = cv2.imread('p.jpg')
+
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+img2 = cv2.resize(img2, (600, 600))
+```
+
+
+```python
+large_img = img1
+small_img = img2
+
+x_offset = 0
+y_offset = 0
+
+x_end = x_offset + small_img.shape[1]
+y_end = y_offset + small_img.shape[0]
+
+large_img[y_offset:y_end, x_offset:x_end] = small_img
+
+plt.imshow(large_img)
+#OVerlay
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85078aa650>
+
+
+
+
+<img width="203" height="252" alt="output_35_1" src="https://github.com/user-attachments/assets/acf5adc8-a43a-44e0-aa94-d2eba4491a19" />
+
+
+
+
+
+## Start of Pt.3
+
+
+
+```python
+img = cv2.imread('rainbow.jpg')
+```
+
+
+```python
+img = cv2.imread('rainbow.jpg', 0)
+```
+
+
+```python
+plt.imshow(img, cmap = 'gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85076f6050>
+
+
+
+
+<img width="207" height="252" alt="output_39_1" src="https://github.com/user-attachments/assets/1d32efe7-c76c-4190-ae0f-705c8da1170d" />
+
+
+
+
+```python
+ret1, thresh1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+#IMage thresholding, everything lighter is white, everything darker is black
+```
+
+
+```python
+ret1 
+#Number of pixels conserved
+```
+
+
+
+
+    127.0
+
+
+
+
+```python
+plt.imshow(thresh1, cmap = 'gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f8506cd1e50>
+
+
+
+
+<img width="207" height="252" alt="output_42_1" src="https://github.com/user-attachments/assets/7220c257-35f3-493f-8961-e63b7edfbf9f" />
+
+
+
+
+```python
+img2 = cv2.imread('rainbow.jpg', 0)
+ret1, thresh1 = cv2.threshold(img2, 127, 255, cv2.THRESH_TRUNC)
+plt.imshow(thresh1,cmap = 'gray')
+#Truncated threshold with more dynamic threshold coloring
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85076f60d0>
+
+
+
+
+<img width="207" height="252" alt="output_43_1" src="https://github.com/user-attachments/assets/3438aa08-df47-446f-9141-60bd698c15c9" />
+
+
+
+
+```python
+img3 = cv2.imread('rainbow.jpg', 0)
+ret1, thresh1 = cv2.threshold(img3, 127, 255, cv2.THRESH_TOZERO)
+plt.imshow(thresh1,cmap = 'gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f850753bb50>
+
+
+
+
+<img width="207" height="252" alt="output_44_1" src="https://github.com/user-attachments/assets/9d83f164-e241-415e-bcb9-b8ad605ba194" />
+
+
+
+
+```python
+img_r = cv2.imread('crossword.jpg', 0)
+plt.imshow(img_r, cmap = 'gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f85072504d0>
+
+
+
+
+<img width="178" height="252" alt="output_45_1" src="https://github.com/user-attachments/assets/10acbe58-dfe3-43ec-bf99-2a58ee4480b9" />
+
+
+
+
+```python
+def show_pic(img):
+    fig = plt.figure(figsize = (15, 15))
+    ax = fig.add_subplot(111)
+    ax.imshow(img, cmap = 'gray')
+```
+
+
+```python
+show_pic(img_r)
+```
+
+
+<img width="557" height="850" alt="output_47_0" src="https://github.com/user-attachments/assets/b750b074-5ad4-47e0-af17-de482dfd1bd0" />
+
+
+
+```python
+ret, th1 = cv2.threshold(img_r, 127, 255, cv2.THRESH_BINARY)
+show_pic(th1)
+#Binary threshing the crossword
+```
+
+
+<img width="557" height="850" alt="output_48_0" src="https://github.com/user-attachments/assets/8773564f-5b34-43bf-84c3-f5578dd314d7" />
+
+
+
+
+```python
+ret, th1 = cv2.threshold(img_r, 200, 255, cv2.THRESH_BINARY)
+show_pic(th1)
+```
+
+
+<img width="557" height="850" alt="output_49_0" src="https://github.com/user-attachments/assets/a2df0e2b-9b39-418a-a08f-5f49cac6799b" />
+
+
+
+
+```python
+th2 = cv2.adaptiveThreshold(img_r, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 8)
+#Colors based on pixel neighbor differences
+```
+
+
+```python
+show_pic(th2)
+#Useing various threshold techniques to try and recive text 
+```
+
+
+<img width="557" height="850" alt="output_51_0" src="https://github.com/user-attachments/assets/04f27274-ad1f-4b58-b37c-43ce9f6c97d3" />
+
+
+
+
+```python
+alpha = 0.6
+beta = 0.4
+
+blended = cv2.addWeighted(th1, alpha, th2, beta, gamma = 0)
+show_pic(blended)
+#Blend of diffrent thresholds
+```
+
+
+<img width="557" height="850" alt="output_52_0" src="https://github.com/user-attachments/assets/784cdb70-dc8b-41fa-bc21-c90644c68ea9" />
+
+
+
+
+```python
+th3 = cv2.adaptiveThreshold(img_r, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 8)
+
+blended = cv2.addWeighted(th1, alpha, th2, beta, gamma = 0)
+show_pic(blended)
+```
+
+
+<img width="557" height="850" alt="output_53_0" src="https://github.com/user-attachments/assets/0c737c53-2246-4fdd-a40a-1fa8bb3a30c6" />
+
+
+
+
+# Corner Detection
+
+```python
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+flat_chess = cv2.imread('Chess.png')
+```
+
+
+```python
+flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611af758d0>
+
+
+
+
+<img width="250" height="252" alt="output_3_1" src="https://github.com/user-attachments/assets/fbf52d4a-32da-49f1-aa09-a9bf79ce5618" />
+
+
+
+
+```python
+gray_flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_flat_chess, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611aed7a90>
+
+
+
+<img width="250" height="252" alt="output_4_1" src="https://github.com/user-attachments/assets/e2ec1da0-af93-4179-910d-eedd27d14979" />
+
+
+
+
+```python
+real_chess = cv2.imread("R_Chess.jpeg")
+real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2RGB)
+
+w_ratio = 0.15
+h_ratio = 0.15
+
+real_chess = cv2.resize(real_chess, (0,0), real_chess, w_ratio, h_ratio)
+```
+
+
+```python
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611ae28810>
+
+
+
+
+<img width="337" height="252" alt="output_6_1" src="https://github.com/user-attachments/assets/4364e468-66e8-4272-9ae9-d95a281ed90c" />
+
+
+
+
+```python
+gray_real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_real_chess, cmap = 'gray')
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611ad88b50>
+
+
+
+
+<img width="337" height="252" alt="output_7_1" src="https://github.com/user-attachments/assets/9e79518c-20d0-4a9f-8259-c55d7e431909" />
+
+
+
+
+```python
+gray = np.float32(gray_flat_chess)
+dst = cv2.cornerHarris(src = gray, blockSize = 3, ksize = 3, k = 0.08)
+#Block size indicates pixel size of detection points
+
+dst = cv2.dilate(dst, None)
+```
+
+
+```python
+flat_chess[dst > 0.01*dst.max()] = [255,0,0]
+
+plt.imshow(flat_chess)
+
+#Make detected corners red
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611ad6cd90>
+
+
+
+
+<img width="250" height="252" alt="output_9_1" src="https://github.com/user-attachments/assets/135ba46d-ea74-4169-9c42-e274b7dab764" />
+
+
+
+
+```python
+gray = np.float32(gray_real_chess)
+dst = cv2.cornerHarris(src = gray, blockSize = 2, ksize = 3, k = 0.04)
+dst = cv2.dilate(dst, None)
+
+real_chess[dst > 0.02*dst.max()] = [255, 0, 0]
+#Number set indicates red
+
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611aa28e10>
+
+
+
+
+<img width="337" height="252" alt="output_10_1" src="https://github.com/user-attachments/assets/d6d8ef6e-5e7f-410f-bedf-9dee876b8306" />
+
+
+
+
+```python
+corners = cv2.goodFeaturesToTrack(gray_flat_chess, 64, 0.01, 10)
+
+#Detecting variance on edge points
+```
+
+
+```python
+corners = np.int0(corners)
+
+for i in corners:
+    x,y = i.ravel()
+    cv2.circle(flat_chess, (x,y),3,(255,0,0), -1)
+    
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611a990cd0>
+
+
+
+
+<img width="250" height="252" alt="output_12_1" src="https://github.com/user-attachments/assets/cedf23f1-6297-4e1e-a4e8-fcfd8b95b182" />
+
+
+
+
+```python
+corners = cv2.goodFeaturesToTrack(gray_real_chess, 100, 0.01, 10)
+
+corners = np.int0(corners)
+
+for i in corners:
+    x,y = i.ravel()
+    cv2.circle(real_chess, (x,y),3,(0,0,255), -1)
+    
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f611a976bd0>
+
+
+
+
+<img width="337" height="252" alt="output_13_1" src="https://github.com/user-attachments/assets/e6dc0816-e086-428e-a11a-ea3dbdd1e180" />
+
 
 
 
