@@ -1,5 +1,6 @@
 
-# Start of Pt.1
+# Sequence Objects
+## Start of Pt.1
 
 
 ```python
@@ -218,9 +219,8 @@ seq3 + seq4
 
 
 
-```python
-#Start of pt.2
-```
+
+## Start of pt.2
 
 
 ```python
@@ -372,9 +372,9 @@ messenger_rna.translate()
 
 
 
-```python
-#Start of Pt.3
-```
+
+## Start of Pt.3
+
 
 
 ```python
@@ -528,9 +528,7 @@ seq1 = Seq("ACGT")
 
 
 
-```python
-#Start of pt.4
-```
+## Start of pt.4
 
 
 ```python
